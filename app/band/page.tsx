@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createContext, useContext, useEffect, useState } from "react";
-import { Band } from "@/lib/types";
+import { Band, FlaskBand, Release } from "@/lib/types";
 import { DiscogTable } from "./discog";
 import { faker } from "@faker-js/faker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -24,6 +24,11 @@ interface BandContextType {
   setBand: (band: Band) => void;
 }
 
+interface ReleaseContextType {
+  releases: Release[] | null;
+  setReleases: (releases: Release[]) => void;
+}
+
 const BandContext = createContext<BandContextType>({
   band: null,
   setBand: () => {}
@@ -35,19 +40,28 @@ const Band = () => {
 
   useEffect(() => {
     const name = searchParams.get("name");
+    const id: number = Number(searchParams.get("id"));
 
-    const fetchData = async (name: string) => {
-      const res = await fetch('/api/band', {
-        method: "POST",
-        body: JSON.stringify({ name })
-      });
+    const fetchData = async (params: { id: number }) => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/band/${params.id}`)
 
       return res.json();
     }
 
-    if (name !== null) {
-      fetchData(name).then((res) =>{
-        setBand(res);
+    if (id !== null) {
+      fetchData({ id }).then((res: Release[]) => {
+        const rel1: Release = res[0];
+
+        const band: Band = {
+          id,
+          name: rel1.name,
+          status: rel1.status,
+          band_picture: rel1.band_picture,
+          members: [],
+          discography: res
+        }
+
+        setBand(band);
       })
     }
   }, [searchParams])
@@ -98,17 +112,17 @@ const Band = () => {
                 <TabsTrigger value="links">Links</TabsTrigger>
               </TabsList>
               <TabsContent className="w-full" value="discography">
-                <DiscogTable band={band.name} albums={band.discography} />
+                <DiscogTable band={band.name} releases={band.discography} />
               </TabsContent>
               <TabsContent value="members">
                 <MemberTable band={band.name} members={band.members} />
               </TabsContent>
-              <TabsContent value="similar-artists">
+              {/* <TabsContent value="similar-artists">
                 <SimilarArtistsTable band={band.name} albums={band.discography} />
               </TabsContent>
               <TabsContent value="links">
                 { band.name && <LinksTable band={band.name} albums={band.discography} /> }
-              </TabsContent>
+              </TabsContent> */}
             </Tabs>
           </div>
         )

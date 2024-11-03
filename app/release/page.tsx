@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { NavigationMenuDemo } from "./nav";
+// import { NavigationMenuDemo } from "./nav";
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Album } from "@/lib/types";
+import { Release } from "@/lib/types";
 import { SongsTable } from "./table";
 import { faker } from "@faker-js/faker";
 import { AlbumBreadcrumbs } from "./breadcrumbs";
@@ -88,33 +88,24 @@ const AlbumLink = (props: { name: string }) => (
 )
 
 export default function Album() {
-  const [album, setAlbum] = useState<Album | null>(null)
+  const [releaes, setRelease] = useState<Release | null>(null)
   const searchParams = useSearchParams();
   const name = searchParams.get("name")
   const band = searchParams.get("band")
 
   useEffect(() => {
-    const albumName = searchParams.get("name");
-    const bandName = searchParams.get("band");
+    const id = Number(searchParams.get("id"));
 
-    const fetchData = async (param: {
-      albumName: string;
-      bandName: string;
-    }) => {
-      const res = await fetch('/api/album', {
-        method: "POST",
-        body: JSON.stringify({
-          albumName,
-          bandName
-        })
-      });
+    const fetchData = async (params: { id: number }) => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/release/${params.id}`);
 
       return res.json();
     }
 
-    if (albumName !== null && bandName !== null) {
-      fetchData({ albumName, bandName }).then((res) =>{
-        setAlbum(res);
+    if (id !== null) {
+      fetchData({ id }).then((res: Release) =>{
+        console.log(res)
+        setRelease(res);
       })
     }
   }, [])
@@ -156,7 +147,7 @@ export default function Album() {
             />
           )}
         </div>
-        { album && <SongsTable songs={album.songs} /> }
+        {/* { release && <SongsTable songs={release.songs} /> } */}
       </div>
     </main>
   );
