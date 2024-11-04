@@ -10,9 +10,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Release } from "@/lib/types";
-import { SongsTable } from "./table";
+import { SongsTable, TracksTable } from "./table";
 import { faker } from "@faker-js/faker";
 import { AlbumBreadcrumbs } from "./breadcrumbs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const SearchInput = () => (
   <Input type="search" placeholder="Search..." />
@@ -75,12 +76,18 @@ const SearchInput = () => (
 //   )
 // }
 
-const AlbumLink = (props: { name: string }) => (
+const AlbumLink = (props: {
+  name: string;
+  id: string;
+}) => (
   <Link
     className="hover:underline"
     href={{
       pathname: "/album",
-      query: { name: props.name }
+      query: {
+        name: props.name,
+        id: props.id
+      }
     }}
   >
     {props.name}
@@ -88,10 +95,9 @@ const AlbumLink = (props: { name: string }) => (
 )
 
 export default function Album() {
-  const [releaes, setRelease] = useState<Release | null>(null)
+  const [release, setRelease] = useState<Release | null>(null)
   const searchParams = useSearchParams();
   const name = searchParams.get("name")
-  const band = searchParams.get("band")
 
   useEffect(() => {
     const id = Number(searchParams.get("id"));
@@ -103,9 +109,9 @@ export default function Album() {
     }
 
     if (id !== null) {
-      fetchData({ id }).then((res: Release) =>{
+      fetchData({ id }).then((res: Release[]) =>{
         console.log(res)
-        setRelease(res);
+        setRelease(res[0]);
       })
     }
   }, [])
@@ -131,23 +137,64 @@ export default function Album() {
         <Separator />
       </div>
       <div className="flex flex-col gap-[1rem] p-[1rem]">
-        { band && name && <AlbumBreadcrumbs band={band} name={name} /> }
-        <div className="flex flex-row">
-          <div className="flex flex-col gap-[1rem]">
-            <span className="text-4xl">{name}</span>
-            <span>Status: active</span>
+        { release && (
+          <AlbumBreadcrumbs
+            band={release?.band_name}
+            name={release?.release_name}
+            id={release.band_id}
+          />
+        )}
+        { release && (
+          <div className="flex flex-col gap-[1rem] p-[1rem]">
+            <div className="flex flex-row">
+              <div className="flex flex-col gap-[1rem]">
+                <span className="text-4xl">{release?.name}</span>
+                <Link
+                  className="hover:underline"
+                  href={{
+                    pathname: '/band',
+                    query: {
+                      name: release.band_name,
+                      id: release.band_id
+                    }
+                  }}
+                >
+                  {release.band_name}
+                </Link>
+              </div>
+              { release.name && (
+                <img
+                  className="ml-auto"
+                  alt={release.release_name}
+                  src={faker.image.urlLoremFlickr({ category: 'people' })}
+                  width={250}
+                  height={250}
+                />
+              )}
+            </div>
+            <Tabs defaultValue="discography">
+              <TabsList>
+                <TabsTrigger value="tracks">Tracks</TabsTrigger>
+                <TabsTrigger value="lineup">Linueup</TabsTrigger>
+                <TabsTrigger value="reviews">Reviews</TabsTrigger>
+                <TabsTrigger value="other">Other</TabsTrigger>
+              </TabsList>
+              <TabsContent className="w-full" value="tracks">
+                { release && <TracksTable tracks={release.tracks ?? []} /> }
+              </TabsContent>
+              {/* <TabsContent value="members">
+                <MemberTable band={band.name} members={band.members} />
+              </TabsContent> */}
+              {/* <TabsContent value="similar-artists">
+                <SimilarArtistsTable band={band.name} albums={band.discography} />
+              </TabsContent>
+              <TabsContent value="links">
+                { band.name && <LinksTable band={band.name} albums={band.discography} /> }
+              </TabsContent> */}
+            </Tabs>
           </div>
-          { name && (
-            <img
-              className="ml-auto"
-              alt={name}
-              src={faker.image.urlLoremFlickr({ category: 'abstract' })}
-              width={250}
-              height={250}
-            />
-          )}
-        </div>
-        {/* { release && <SongsTable songs={release.songs} /> } */}
+        )
+      }
       </div>
     </main>
   );

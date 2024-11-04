@@ -48,13 +48,22 @@ export interface Song {
   lyrics?: string;
 }
 
-export interface Release {
-  release_name: string,
+export interface Track {
   name: string;
-  status: "active" | "split-up" | "unknown" | 'inactive',
-  band_picture: string,
-  release_id: number,
-  year: number,
-  review_avg: number,
-  review_count: number
+  length: string;
+  lyrics?: string;
+}
+
+export interface Release {
+  release_name: string;
+  name: string;
+  band_name: string;
+  band_id: string;
+  status: "active" | "split-up" | "unknown" | 'inactive';
+  band_picture: string;
+  release_id: number;
+  year: number;
+  review_avg: number;
+  review_count: number;
+  tracks: Track[];
 }

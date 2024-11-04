@@ -48,13 +48,13 @@ const Band = () => {
       return res.json();
     }
 
-    if (id !== null) {
+    if (id !== null && name !== null) {
       fetchData({ id }).then((res: Release[]) => {
         const rel1: Release = res[0];
 
         const band: Band = {
           id,
-          name: rel1.name,
+          name,
           status: rel1.status,
           band_picture: rel1.band_picture,
           members: [],
@@ -86,8 +86,7 @@ const Band = () => {
       <div className="py-[1rem] w-full">
         <Separator />
       </div>
-      {
-        band && (
+      { band && (
           <div className="flex flex-col gap-[1rem] p-[1rem]">
             <div className="flex flex-row">
               <div className="flex flex-col gap-[1rem]">
