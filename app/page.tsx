@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Band } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 const SearchInput = () => (
   <Input type="search" placeholder="Search..." />
@@ -33,12 +34,14 @@ const BandLink = (props: {
 export default function Home() {
   const [bands, setBands] = useState<Band[]>([]);
 
+  const router = useRouter();
+
   useEffect(() => {
     const fetchData = async () => {
       // const response = await fetch('/api/home');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/band/`)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URI}:${process.env.NEXT_PUBLIC_API_PORT}/band/`)
 
-      return response.json()
+      return response.json();
     }
 
     fetchData().then((res) => {
@@ -55,7 +58,11 @@ export default function Home() {
         </Avatar>
         {/* <NavigationMenuDemo /> */}
         <div className="ml-auto flex flex-row gap-[1rem]">
-          <Button>Add Band</Button>
+          <Button
+            onClick={() => router.push("/create/band")}
+          >
+            Add Band
+          </Button>
           <SearchInput />
         </div>
         <Avatar>

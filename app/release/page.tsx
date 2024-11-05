@@ -103,7 +103,7 @@ export default function Album() {
     const id = Number(searchParams.get("id"));
 
     const fetchData = async (params: { id: number }) => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/release/${params.id}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}:${process.env.NEXT_PUBLIC_API_PORT}/release/${params.id}`);
 
       return res.json();
     }

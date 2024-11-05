@@ -7,13 +7,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { createContext, useContext, useEffect, useState } from "react";
-import { Band, FlaskBand, Release } from "@/lib/types";
+import { Band, Release } from "@/lib/types";
 import { Discography } from "./discog";
 import { faker } from "@faker-js/faker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MemberTable } from "./members";
-import { SimilarArtistsTable } from "./similar-artists";
-import { LinksTable } from "./links";
 
 const SearchInput = () => (
   <Input type="search" placeholder="Search..." />
@@ -43,7 +41,7 @@ const Band = () => {
     const id: number = Number(searchParams.get("id"));
 
     const fetchData = async (params: { id: number }) => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}/band/${params.id}`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}:${process.env.NEXT_PUBLIC_API_PORT}/band/${params.id}`)
 
       return res.json();
     }
