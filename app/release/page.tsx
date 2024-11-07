@@ -1,12 +1,7 @@
 'use client'
 
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-// import { NavigationMenuDemo } from "./nav";
-import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Release } from "@/lib/types";
@@ -14,10 +9,7 @@ import { TracksTable } from "./table";
 import { faker } from "@faker-js/faker";
 import { AlbumBreadcrumbs } from "./breadcrumbs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const SearchInput = () => (
-  <Input type="search" placeholder="Search..." />
-);
+import { Header } from "@/components/header";
 
 // const RecentAdditions = () => {
 //   return (
@@ -118,21 +110,7 @@ export default function Album() {
 
   return (
     <main className="py-[1rem] flex-col">
-      <div className="flex flex-row gap-[1rem] px-[1rem]">
-        <Link href="/">
-          <Avatar>
-            <AvatarFallback>L</AvatarFallback>
-          </Avatar>
-        </Link>
-        {/* <NavigationMenuDemo /> */}
-        <div className="ml-auto flex flex-row gap-[1rem]">
-          <Button>Add Band</Button>
-          <SearchInput />
-        </div>
-        <Avatar>
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
-      </div>
+      <Header />
       <div className="py-[1rem] w-full">
         <Separator />
       </div>

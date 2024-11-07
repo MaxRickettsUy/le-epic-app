@@ -1,17 +1,11 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Band } from "@/lib/types";
 import { useRouter } from "next/navigation";
-
-const SearchInput = () => (
-  <Input type="search" placeholder="Search..." />
-);
+import { Header } from "@/components/header";
 
 const BandLink = (props: {
   name: string;
@@ -52,29 +46,13 @@ export default function Home() {
 
   return (
     <main className="py-[1rem] flex-col">
-      <div className="flex flex-row gap-[1rem] px-[1rem]">
-        <Avatar>
-          <AvatarFallback>L</AvatarFallback>
-        </Avatar>
-        {/* <NavigationMenuDemo /> */}
-        <div className="ml-auto flex flex-row gap-[1rem]">
-          <Button
-            onClick={() => router.push("/create/band")}
-          >
-            Add Band
-          </Button>
-          <SearchInput />
-        </div>
-        <Avatar>
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
-      </div>
+      <Header />
       <div className="py-[1rem] w-full">
         <Separator />
       </div>
       <div className="flex flex-col md:flex-row lg:flex-row xl:flex-row gap-[1rem] p-[1rem]">
         <div className="flex flex-col">
-          { bands.map((b, i) => <BandLink key={i} id={b.id} name={b.name} />) }
+          { bands.map((b, i) => <BandLink key={i} id={`${b.id}`} name={b.name} />) }
         </div>
       </div>
     </main>

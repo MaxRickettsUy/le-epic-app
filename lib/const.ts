@@ -1,43 +1,43 @@
 export const countries = [
   {
-      "name": "Afghanistan",
-      "code": "AF"
+    "name": "Afghanistan",
+    "code": "AF"
   },
   {
-      "name": "Albania",
-      "code": "AL"
+    "name": "Albania",
+    "code": "AL"
   },
   {
-      "name": "Algeria",
-      "code": "DZ"
+    "name": "Algeria",
+    "code": "DZ"
   },
   {
-      "name": "American Samoa",
-      "code": "AS"
+    "name": "American Samoa",
+    "code": "AS"
   },
   {
-      "name": "Andorra",
-      "code": "AD"
+    "name": "Andorra",
+    "code": "AD"
   },
   {
-      "name": "Angola",
-      "code": "AO"
+    "name": "Angola",
+    "code": "AO"
   },
   {
-      "name": "Anguilla",
-      "code": "AI"
+    "name": "Anguilla",
+    "code": "AI"
   },
   {
-      "name": "Antarctica",
-      "code": "AQ"
+    "name": "Antarctica",
+    "code": "AQ"
   },
   {
-      "name": "Antigua and Barbuda",
-      "code": "AG"
+    "name": "Antigua and Barbuda",
+    "code": "AG"
   },
   {
-      "name": "Argentina",
-      "code": "AR"
+    "name": "Argentina",
+    "code": "AR"
   },
   {
       "name": "Armenia",
@@ -1011,4 +1011,19 @@ export const countries = [
       "name": "Åland Islands",
       "code": "AX"
   }
+]
+
+export const statusMap = {
+  "active": "Active",
+  "on-hold": "On Hold",
+  "split-up": "Split Up",
+  "unknown": "Unknown"
+}
+
+export const releaseTypes = [
+  { value: "full-length", name: "Full Length" },
+  { value: "ep", name: "EP" },
+  { value: "demo", name: "Demo" },
+  { value: "single", name: "Single" },
+  { value: "split", name: "Split" }
 ]

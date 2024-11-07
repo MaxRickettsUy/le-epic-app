@@ -1,19 +1,26 @@
 'use client'
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { countries } from "@/lib/const";
 import { Band } from "@/lib/types";
-import { ChangeEvent, useMemo, useState } from "react";
+import Link from "next/link";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import _ from 'lodash';
+import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/header";
 
 const StatusSelect = (props: {
+  defaultValue: string;
   onChange: (name: string, value: string) => void;
 }) => (
-  <Select onValueChange={(s) => props.onChange('status', s)}>
+  <Select
+    defaultValue={props.defaultValue}
+    onValueChange={(s) => props.onChange('status', s)}
+  >
     <SelectTrigger className="w-[180px]">
       <SelectValue placeholder="Status" />
     </SelectTrigger>
@@ -48,8 +55,34 @@ type BandKey = keyof Band;
 export default function Page() {
   const [bandForm, setBandForm] = useState<Band>({ status: "active", band_picture: "foo" } as Band);
   const [typing, setTyping] = useState<boolean>(false);
+  const searchParams = useSearchParams();
 
   const requiredFields: BandKey[] = ["name", "status"];
+
+  useEffect(() => {
+    const id: number = Number(searchParams.get("id"));
+
+    const fetchData = async (params: { id: number }) => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URI}:${process.env.NEXT_PUBLIC_API_PORT}/band/${params.id}`)
+
+      return res.json();
+    }
+
+    if (id !== null) {
+      fetchData({ id }).then((res: Band) => {
+        console.log(res)
+
+        const band: Band = {
+          ...res,
+          members: [],
+        }
+
+        console.log(band)
+
+        setBandForm(band);
+      })
+    }
+  }, [searchParams])
 
   const handleInputChange = (key: BandKey, e: ChangeEvent<HTMLInputElement>) => {
     setBandForm({
@@ -114,8 +147,9 @@ export default function Page() {
       <div className="flex flex-col gap-[1rem] p-[1rem]">
         <div className="flex flex-row">
           <div className="flex flex-col gap-[1rem]">
-            <span className="text-4xl">Add Band</span>
+            <span className="text-4xl">Edit Band</span>
             <Input
+              defaultValue={bandForm.name}
               onChange={(e) => {
                 if (!typing) {
                   setTyping(true);
@@ -128,7 +162,7 @@ export default function Page() {
             <CountrySelect onChange={handleSelect} />
             <Input type="text" placeholder="City" />
             <Input type="text" placeholder="State" />
-            <StatusSelect onChange={handleSelect} />
+            <StatusSelect defaultValue={bandForm.status} onChange={handleSelect} />
             <Button disabled={submitDisabled || typing} onClick={() => handleSubmit(bandForm)}>Submit</Button>
           </div>
         </div>
